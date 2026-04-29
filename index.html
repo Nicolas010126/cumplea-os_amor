@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños, mi Princesa 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #a4f0fa;
+    --blush: #f2c4c4;
+    --rose: #d4797a;
+    --deep-rose: #a04a4b;
+    --gold: #c9a96e;
+    --warm-brown: #6b3f3f;
+    --text: #3a2020;
+    --text-muted: #8a6060;
+    --petal: #f9e4e4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Lora', serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  /* ── PÉTALOS ── */
+  .petals-container {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -40px; font-size: 18px; animation: fall linear infinite; opacity: 0.5;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-40px) rotate(0deg) translateX(0); opacity: 0.6; }
+    50%  { transform: translateY(50vh) rotate(180deg) translateX(30px); }
+    100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
+  }
+
+  /* ── INTRO OVERLAY ── */
+  #intro-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, #1a0a0a 0%, #3a1515 40%, #5c2020 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2rem;
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  #intro-overlay.hide { opacity: 0; transform: scale(1.04); pointer-events: none; }
+
+  .intro-petals { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .intro-petal  { position: absolute; top: -40px; font-size: 20px; animation: fall linear infinite; opacity: 0.25; }
+
+  .intro-tag {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: clamp(0.85rem, 2.5vw, 1rem); color: #c9a96e;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 1.5rem; animation: fadeUp 1.2s ease both;
+  }
+  .intro-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 9vw, 5.5rem); font-weight: 700; font-style: italic;
+    color: #fdf6ee; line-height: 1.15; margin-bottom: 0.3rem;
+    animation: fadeUp 1.2s 0.2s ease both; animation-fill-mode: both;
+  }
+  .intro-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.5rem, 10vw, 6rem); color: #f2c4c4;
+    display: block; line-height: 1.1;
+    animation: fadeUp 1.2s 0.5s ease both; animation-fill-mode: both;
+  }
+  .intro-twenty {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.5rem); color: #c9a96e;
+    letter-spacing: 0.15em; margin: 0.4rem 0 0.3rem;
+    animation: fadeUp 1.2s 0.65s ease both; animation-fill-mode: both;
+  }
+  .intro-deco {
+    color: #d4797a; font-size: clamp(1.2rem, 4vw, 2rem);
+    letter-spacing: 0.8rem; margin: 1rem 0 2rem;
+    animation: fadeUp 1.2s 0.7s ease both; animation-fill-mode: both;
+  }
+  .intro-btn {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem); color: #3a1515;
+    background: #f2c4c4; border: none; padding: 0.9rem 3rem;
+    border-radius: 50px; cursor: pointer; letter-spacing: 0.05em;
+    animation: fadeUp 1.2s 1s ease both; animation-fill-mode: both;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 24px rgba(242,196,196,0.2);
+  }
+  .intro-btn:hover { background: #fdf6ee; transform: scale(1.05); }
+  .intro-btn:active { transform: scale(0.98); }
+
+  /* ── PANTALLAS ── */
+  #app { position: fixed; inset: 0; z-index: 1; }
+
+  .screen {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 2rem 2rem 5.5rem; text-align: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    transform: translateY(24px);
+    overflow-y: scroll;
+  }
+  .screen.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+  /* ── NAV ── */
+  #nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+    gap: clamp(0.2rem, 1.5vw, 0.9rem);
+    padding: 0.6rem 0.8rem 0.9rem;
+    background: linear-gradient(to top, rgba(253,246,238,0.98) 80%, transparent);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(242,196,196,0.3);
+  }
+  .nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: none; border: none; cursor: pointer;
+    padding: 0.35rem 0.5rem; border-radius: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .nav-btn:hover { background: rgba(212,121,122,0.1); }
+  .nav-btn.current { background: rgba(212,121,122,0.15); }
+  .nav-btn:active { transform: scale(0.88); }
+  .nav-emoji {
+    font-size: clamp(1.35rem, 4vw, 1.75rem); line-height: 1; display: block;
+    filter: grayscale(0.4); transition: filter 0.2s, transform 0.2s;
+  }
+  .nav-btn.current .nav-emoji { filter: none; transform: scale(1.18); }
+  .nav-label {
+    font-family: 'Lora', serif; font-size: clamp(0.52rem, 1.4vw, 0.62rem);
+    color: var(--text-muted); letter-spacing: 0.02em; font-style: italic;
+  }
+  .nav-btn.current .nav-label { color: var(--rose); }
+
+  /* ── SECTION LABELS ── */
+  .section-label { font-family: 'Dancing Script', cursive; font-size: 1rem; color: var(--rose); margin-bottom: 0.25rem; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 5vw, 2.3rem); font-weight: 700; color: var(--deep-rose); margin-bottom: 0.6rem;
+  }
+  .section-divider {
+    display: flex; align-items: center; justify-content: center; gap: 0.7rem;
+    margin-bottom: 0.4rem; color: var(--blush); font-size: 1rem;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; max-width: 70px; height: 1px; background: var(--blush);
+  }
+
+  /* ── HERO ── */
+  .s-hero { background: radial-gradient(ellipse at 50% 30%, #ffe8e8 0%, var(--cream) 70%); }
+  .hero-tag { font-family: 'Dancing Script', cursive; font-size: clamp(0.95rem, 2.5vw, 1.2rem); color: var(--rose); margin-bottom: 0.7rem; }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 10vw, 6.5rem); font-weight: 700; color: var(--deep-rose); line-height: 1.05; margin-bottom: 0.3rem;
+  }
+  .hero-title span { font-style: italic; color: var(--rose); }
+  .hero-subtitle { font-family: 'Dancing Script', cursive; font-size: clamp(1.8rem, 5.5vw, 3rem); color: var(--gold); margin-bottom: 0.5rem; }
+  .twenty-badge {
+    display: inline-block; font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.6rem); color: var(--gold);
+    background: linear-gradient(135deg, #fff8ee, #fff3e0);
+    border: 1.5px solid var(--gold); padding: 0.35rem 1.8rem;
+    border-radius: 50px; margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(201,169,110,0.15);
+  }
+  .hero-date {
+    display: inline-block; border: 1.5px solid var(--blush);
+    padding: 0.45rem 1.6rem; border-radius: 50px;
+    font-size: 0.8rem; letter-spacing: 0.15em;
+    color: var(--text-muted); text-transform: uppercase;
+    background: rgba(255,255,255,0.5);
+  }
+
+  /* ── NACIMIENTO ── */
+  .s-birth { background: radial-gradient(ellipse at 50% 40%, #fff3e0 0%, var(--cream) 70%); }
+
+  .birth-time {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 13vw, 7rem);
+    font-weight: 700; color: var(--deep-rose);
+    line-height: 1; letter-spacing: 0.04em; margin: 0.4rem 0;
+  }
+
+  .birth-ampm {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+    color: var(--gold); display: block; letter-spacing: 0.1em; margin-top: 0.15rem;
+  }
+
+  .birth-card {
+    background: white; border: 1.5px solid var(--blush); border-radius: 24px;
+    padding: 1.4rem 1.8rem; max-width: 400px; width: 100%; margin-top: 1.3rem;
+    box-shadow: 0 6px 28px rgba(212,121,122,0.1); position: relative;
+  }
+
+  .birth-day {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.2rem, 4vw, 1.6rem); color: var(--gold); margin-bottom: 0.5rem;
+  }
+
+  .birth-text {
+    font-family: 'Lora', serif; font-size: clamp(0.85rem, 2.5vw, 0.98rem);
+    line-height: 1.8; color: var(--text-muted); font-style: italic;
+  }
+
+  .birth-text strong { color: var(--deep-rose); font-style: normal; font-weight: 500; }
+
+  /* ── MENSAJES ── */
+  .s-messages { background: radial-gradient(ellipse at 30% 70%, #ffe8f0 0%, var(--cream) 70%); }
+  .emoji-buttons-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0.7rem; width: 100%; max-width: 460px; margin-top: 1rem;
+  }
+  .emoji-btn {
+    background: white; border: 1.5px solid var(--blush); border-radius: 18px;
+    padding: 0.9rem 0.4rem; cursor: pointer; text-align: center;
+    transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(212,121,122,0.07);
+    display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+  }
+  .emoji-btn:hover { transform: translateY(-4px) scale(1.07); border-color: var(--rose); box-shadow: 0 8px 24px rgba(212,121,122,0.18); background: var(--petal); }
+  .emoji-btn:active { transform: scale(0.96); }
+  .emoji-btn .btn-emoji { font-size: 1.7rem; }
+  .emoji-btn .btn-label { font-size: 0.6rem; color: var(--text-muted); font-style: italic; font-family: 'Lora', serif; }
+
+  /* ── POPUP MENSAJE ── */
+  .msg-overlay {
+    position: fixed; inset: 0; background: rgba(58,32,32,0.45); z-index: 8000;
+    display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(4px);
+  }
+  .msg-overlay.open { opacity: 1; pointer-events: all; }
+  .msg-card {
+    background: linear-gradient(135deg, #fff8f8, white); border: 1.5px solid var(--blush);
+    border-radius: 28px; padding: 2.2rem 1.8rem; max-width: 360px; width: 100%;
+    text-align: center; box-shadow: 0 20px 60px rgba(212,121,122,0.2);
+    transform: scale(0.85) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .msg-overlay.open .msg-card { transform: scale(1) translateY(0); }
+  .msg-card-emoji { font-size: 2.8rem; margin-bottom: 0.8rem; display: block; }
+  .msg-card-title { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: var(--deep-rose); margin-bottom: 0.8rem; }
+  .msg-card-text { font-family: 'Lora', serif; font-size: 0.92rem; line-height: 1.85; color: var(--text); font-style: italic; }
+  .msg-close {
+    margin-top: 1.5rem; background: var(--blush); color: var(--warm-brown); border: none;
+    padding: 0.6rem 2.2rem; border-radius: 50px; font-family: 'Lora', serif; font-size: 0.88rem;
+    cursor: pointer; transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .msg-close:hover { background: var(--rose); color: white; transform: scale(1.04); }
+
+  /* ── TIMELINE ── */
+  .s-timeline {
+    background: radial-gradient(ellipse at 70% 30%, #fff8e8 0%, var(--cream) 70%);
+    justify-content: flex-start; padding-top: 2.5rem;
+  }
+  .timeline { position: relative; padding: 0.4rem 0; width: 100%; max-width: 520px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+    top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--blush) 10%, var(--blush) 90%, transparent);
+  }
+  .timeline-item {
+    display: flex; justify-content: flex-end;
+    padding-right: calc(50% + 1.2rem); margin-bottom: 1.2rem; position: relative;
+  }
+  .timeline-item:nth-child(even) { justify-content: flex-start; padding-right: 0; padding-left: calc(50% + 1.2rem); }
+  .timeline-dot {
+    position: absolute; left: 50%; top: 0.7rem; transform: translateX(-50%);
+    width: 12px; height: 12px; border-radius: 50%; background: var(--rose);
+    border: 3px solid var(--cream); box-shadow: 0 0 0 2px var(--blush); z-index: 2;
+  }
+  .timeline-card {
+    background: white; border: 1px solid var(--blush); border-radius: 13px;
+    padding: 0.8rem 1rem; max-width: 190px;
+    box-shadow: 0 4px 14px rgba(212,121,122,0.07); text-align: left;
+  }
+  .timeline-emoji { font-size: 1.1rem; margin-bottom: 0.25rem; display: block; }
+  .timeline-date { font-family: 'Dancing Script', cursive; font-size: 0.85rem; color: var(--rose); margin-bottom: 0.15rem; }
+  .timeline-text { font-size: 0.73rem; line-height: 1.55; color: var(--text-muted); }
+
+  /* ── RAZONES ── */
+  .s-reasons { background: radial-gradient(ellipse at 50% 50%, #ffe8f5 0%, var(--cream) 70%); }
+  .reasons-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+    gap: 0.7rem; width: 100%; max-width: 520px; margin-top: 1.2rem;
+  }
+  .reason-card {
+    background: white; border: 1px solid var(--blush); border-radius: 15px;
+    padding: 1.1rem 0.8rem; text-align: center; transition: all 0.25s ease;
+  }
+  .reason-card:hover { box-shadow: 0 8px 22px rgba(212,121,122,0.14); transform: translateY(-3px); border-color: var(--rose); }
+  .reason-icon { font-size: 1.7rem; margin-bottom: 0.4rem; display: block; }
+  .reason-text { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── CARTA ── */
+  .s-carta {
+    background: radial-gradient(ellipse at 40% 60%, #fff5f5 0%, var(--cream) 70%);
+    justify-content: flex-start; padding-top: 2.5rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .carta-scroll {
+    width: 100%; max-width: 540px;
+    padding-bottom: 1rem;
+  }
+  .carta-section {
+    background: linear-gradient(135deg, #fff8f8, white); border: 1px solid var(--blush);
+    border-radius: 22px; padding: 1.8rem 1.6rem; max-width: 540px; width: 100%;
+    position: relative; box-shadow: 0 8px 36px rgba(212,121,122,0.09); overflow: hidden; text-align: left; margin-top: 1rem;
+  }
+  .carta-section::before {
+    content: '❝'; position: absolute; top: 0.3rem; left: 1rem;
+    font-size: 4.5rem; color: var(--blush); opacity: 0.35;
+    font-family: 'Playfair Display', serif; line-height: 1;
+  }
+  .carta-text { font-family: 'Lora', serif; font-size: 0.88rem; line-height: 1.9; color: var(--text); position: relative; z-index: 1; }
+  .carta-firma { margin-top: 1.2rem; text-align: right; font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: var(--rose); }
+
+  /* ── GALERÍA ── */
+  .s-gallery { background: radial-gradient(ellipse at 60% 40%, #f5f8ff 0%, var(--cream) 70%); }
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 0.8rem; width: 100%; max-width: 440px; margin-top: 1rem;
+  }
+  .gallery-item {
+    display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  }
+  .gallery-slot {
+    aspect-ratio: 1; border-radius: 13px; border: 2px dashed var(--blush);
+    background: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 100%; text-align: center; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden;
+  }
+  .gallery-slot:hover { border-color: var(--rose); background: var(--petal); transform: scale(1.04); }
+  .gallery-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: 11px; }
+  .gallery-slot-icon { font-size: 1.5rem; }
+  .gallery-slot-label { font-size: 0.6rem; color: var(--text-muted); font-style: italic; text-align: center; line-height: 1.3; }
+
+  /* ── ANIMACIONES ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .timeline::before { left: 1.1rem; }
+    .timeline-item { padding-right: 0; padding-left: 2.8rem; justify-content: flex-start; }
+    .timeline-item:nth-child(even) { padding-left: 2.8rem; }
+    .timeline-dot { left: 1.1rem; }
+    .timeline-card { max-width: 100%; }
+    .gallery-grid { grid-template-columns: repeat(2,1fr); }
+    .reasons-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro-overlay">
+  <div class="intro-petals" id="introPetals"></div>
+  <p class="intro-tag">✦ solo para ti ✦</p>
+  <h1 class="intro-main">Para ti,<span class="intro-name">mi Princesa 🌸</span></h1>
+  <p class="intro-twenty">✨ 20 años ✨</p>
+  <div class="intro-deco">🌸 ✦ 🌸</div>
+  <button class="intro-btn" onclick="openPage()">Abrir tu sorpresa →</button>
+</div>
+
+<div class="petals-container" id="petals"></div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- 0: HERO -->
+  <div class="screen s-hero active" id="screen-0">
+    <p class="hero-tag">✦ para mi princesa favorita ✦</p>
+    <h1 class="hero-title">Feliz<br><span>Cumpleaños</span></h1>
+    <h2 class="hero-subtitle">Ignacia 🌸</h2>
+    <div class="twenty-badge">✨ 20 años ✨</div>
+    <span class="hero-date">18 de Noviembre</span>
+  </div>
+
+  <!-- 1: NACIMIENTO -->
+  <div class="screen s-birth" id="screen-1">
+    <p class="section-label">✦ un jueves muy especial ✦</p>
+    <h2 class="section-title">El día que llegaste</h2>
+    <div class="section-divider"><span>🌟</span></div>
+    <p class="birth-time">09:20<span class="birth-ampm">de la mañana</span></p>
+    <div class="birth-card">
+      <p class="birth-day">Jueves, 18 de Noviembre</p>
+      <p class="birth-text">
+        A las nueve y veinte de la mañana de un día jueves,<br>
+        nació la <strong>mujer más espectacular y hermosa</strong><br>
+        que existe en todo el universo.<br><br>
+        El mundo no lo sabía todavía,<br>
+        pero ese día cambió para siempre. 🌸
+      </p>
+    </div>
+  </div>
+
+  <!-- 2: MENSAJES -->
+  <div class="screen s-messages" id="screen-2">
+    <p class="section-label">✦ solo para ti ✦</p>
+    <h2 class="section-title">Mis mensajes para ti</h2>
+    <div class="section-divider"><span>💌</span></div>
+    <p style="font-size:0.78rem;color:var(--text-muted);font-style:italic;">Toca cada emoji para abrir un mensaje 🌸</p>
+    <div class="emoji-buttons-grid" id="msgGrid"></div>
+  </div>
+
+  <!-- 3: TIMELINE -->
+  <div class="screen s-timeline" id="screen-3">
+    <p class="section-label">✦ nuestra historia ✦</p>
+    <h2 class="section-title">Cómo llegaste a mí</h2>
+    <div class="section-divider"><span>💛</span></div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">📱</span><p class="timeline-date">El comienzo</p><p class="timeline-text">Un dia como cualquier otro en el instituto vi a una niña que me dejo enbobado con su belleza y me propuce encontrarla a como de lugar.</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">💬</span><p class="timeline-date">Los primeros mensajes</p><p class="timeline-text">Cada notificación era una pequeña mariposa. Sin saber que esas conversaciones cambiarían todo.</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">🌟</span><p class="timeline-date">El momento</p><p class="timeline-text">Cuando te vi en persona supe que no era una coincidencia. Fue el destino con buena señal.</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">🌸</span><p class="timeline-date">Primer Beso</p><p class="timeline-text">El dia que me atrevi a besar sus hermosos labios fue tan bello que no queria que acabara.</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">♾️</span><p class="timeline-date">Especial</p><p class="timeline-text">Te volviste mi persona favorita sin que me diera cuenta en el momento que lo pense ya eras mi mundo entero.</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><span class="timeline-emoji">♾️</span><p class="timeline-date">Hoy y siempre</p><p class="timeline-text">Un año que parece una vida entera, y al mismo tiempo el comienzo de todo lo que está por venir.</p></div></div>
+    </div>
+  </div>
+
+  <!-- 4: RAZONES -->
+  <div class="screen s-reasons" id="screen-4">
+    <p class="section-label">✦ desde el fondo de mi corazón ✦</p>
+    <h2 class="section-title">Por qué eres especial</h2>
+    <div class="section-divider"><span>💕</span></div>
+    <div class="reasons-grid" id="reasonsGrid"></div>
+  </div>
+
+  <!-- 5: CARTA -->
+  <div class="screen s-carta" id="screen-5">
+    <p class="section-label">✦ solo para ti ✦</p>
+    <h2 class="section-title">Una carta</h2>
+    <div class="section-divider"><span>💌</span></div>
+    <div class="carta-scroll" id="cartaScroll">
+    <div class="carta-section">
+      <p class="carta-text">
+        Mi princesa Ignacia,<br><br>
+        No sé exactamente cuándo pasó, pero un día me di cuenta de que pensar en ti ya era mi parte favorita del día.<br><br>
+        Que alguien como tú exista y además haya decidido escribirle a este simple mortal por instagram... si eso no es magia, entonces no sé qué lo es.<br><br>
+        No tengo las palabras perfectas, y probablemente nunca las tendré, pero sí sé esto con certeza: amo absolutamente todo de ti. Tu forma de ser, tu voz, tu risa, hasta las cosas que crees que no son para tanto.<br><br>
+        Hoy que cumples <em>20 años</em> quiero que sepas que el mundo es mejor contigo en él. Que <em>yo</em> soy mejor contigo cerca.<br><br>
+        Gracias por aceptar esa solicitud.<br>
+        Gracias por dejarme llamarte mi princesa.<br>
+        Gracias por ser tú, simplemente.
+      </p>
+      <p class="carta-firma">Con todo mi amor, Yuyiin 🌸</p>
+    </div>
+    </div>
+  </div>
+
+  <!-- 6: GALERÍA -->
+  <div class="screen s-gallery" id="screen-6">
+    <p class="section-label">✦ nuestros momentos ✦</p>
+    <h2 class="section-title">Nuestra galería</h2>
+    <div class="section-divider"><span>📸</span></div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<nav id="nav"></nav>
+
+<!-- Popup -->
+<div class="msg-overlay" id="msgOverlay" onclick="closeMsgIfOutside(event)">
+  <div class="msg-card">
+    <span class="msg-card-emoji" id="msgEmoji">🌸</span>
+    <p class="msg-card-title" id="msgTitle"></p>
+    <p class="msg-card-text" id="msgText"></p>
+    <button class="msg-close" onclick="closeMsg()">Cerrar 🌸</button>
+  </div>
+</div>
+
+<script>
+const petalEmojis = ['🌸','🌺','✿','❀','🌷'];
+
+// INTRO PETALS
+const introPetals = document.getElementById('introPetals');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'intro-petal';
+  p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+  p.style.left = Math.random() * 100 + '%';
+  p.style.fontSize = (14 + Math.random() * 12) + 'px';
+  p.style.animationDuration = (7 + Math.random() * 9) + 's';
+  p.style.animationDelay = (Math.random() * 8) + 's';
+  introPetals.appendChild(p);
+}
+
+function openPage() {
+  const o = document.getElementById('intro-overlay');
+  o.classList.add('hide');
+  setTimeout(() => o.style.display = 'none', 950);
+}
+
+// FLOATING PETALS
+const container = document.getElementById('petals');
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+  p.style.left = Math.random() * 100 + '%';
+  p.style.fontSize = (12 + Math.random() * 14) + 'px';
+  p.style.animationDuration = (6 + Math.random() * 10) + 's';
+  p.style.animationDelay = (Math.random() * 10) + 's';
+  container.appendChild(p);
+}
+
+// NAV
+const navSections = [
+  { emoji: '🌸', label: 'Inicio' },
+  { emoji: '🌟', label: 'Origen' },
+  { emoji: '💌', label: 'Mensajes' },
+  { emoji: '💛', label: 'Historia' },
+  { emoji: '✨', label: 'Razones' },
+  { emoji: '📝', label: 'Carta' },
+  { emoji: '📷', label: 'Fotos' },
+];
+
+let current = 0;
+const nav = document.getElementById('nav');
+navSections.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn' + (i === 0 ? ' current' : '');
+  btn.innerHTML = `<span class="nav-emoji">${s.emoji}</span><span class="nav-label">${s.label}</span>`;
+  btn.onclick = () => goTo(i);
+  nav.appendChild(btn);
+});
+
+function goTo(i) {
+  document.getElementById('screen-' + current).classList.remove('active');
+  nav.children[current].classList.remove('current');
+  current = i;
+  document.getElementById('screen-' + current).classList.add('active');
+  nav.children[current].classList.add('current');
+}
+
+// SWIPE
+let tx = 0;
+let ty = 0;
+let isScrolling = false;
+document.addEventListener('touchstart', e => {
+  tx = e.touches[0].clientX;
+  ty = e.touches[0].clientY;
+  isScrolling = false;
+}, { passive: true });
+document.addEventListener('touchmove', e => {
+  const dx = Math.abs(e.touches[0].clientX - tx);
+  const dy = Math.abs(e.touches[0].clientY - ty);
+  const activeScreen = document.getElementById('screen-' + current);
+  if (activeScreen && dy > dx && activeScreen.scrollHeight > activeScreen.clientHeight) {
+    isScrolling = true;
+  }
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  if (isScrolling) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 55) {
+    if (dx < 0 && current < navSections.length - 1) goTo(current + 1);
+    if (dx > 0 && current > 0) goTo(current - 1);
+  }
+});
+
+// GALERÍA — fotos desde carpeta /fotos en GitHub
+const photoFiles = [
+  { src: 'fotos/foto1.jpg', label: 'Nuestra primera foto' },
+  { src: 'fotos/foto2.jpg', label: 'Un día especial' },
+  { src: 'fotos/foto3.jpg', label: 'Mi lugar favorito' },
+  { src: 'fotos/foto4.jpg', label: 'Cuando sonríes' },
+  { src: 'fotos/foto5.jpg', label: 'Un recuerdo bonito' },
+  { src: 'fotos/foto6.jpg', label: 'Tú y yo' },
+];
+
+photoFiles.forEach((photo, i) => {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'gallery-item';
+  const slot = document.createElement('div');
+  slot.className = 'gallery-slot';
+  const img = document.createElement('img');
+  img.src = photo.src;
+  img.alt = photo.label;
+  img.onerror = () => {
+    slot.innerHTML = `<span class="gallery-slot-icon">📷</span>`;
+  };
+  slot.appendChild(img);
+  const label = document.createElement('span');
+  label.className = 'gallery-slot-label';
+  label.textContent = photo.label;
+  wrapper.appendChild(slot);
+  wrapper.appendChild(label);
+  document.getElementById('galleryGrid').appendChild(wrapper);
+});
+
+// MENSAJES
+const msgs = [
+  { emoji:'💌', label:'Para ti',     title:'Un mensaje de corazón',       text:'Quería que supieras que cada vez que pienso en ti, sonrío sin darme cuenta. Así de simple y así de bonito eres tú para mí.' },
+  { emoji:'🌙', label:'De noche',    title:'Lo que pienso antes de dormir', text:'Antes de cerrar los ojos, siempre hay un pensamiento que se cuela... y ese pensamiento tiene tu nombre, princesa.' },
+  { emoji:'✨', label:'Tu magia',    title:'Lo que me gusta de ti',        text:'Hay algo en ti que no sé explicar. Una forma de ser que hace que todo se sienta más fácil, más bonito, más mío.' },
+  { emoji:'🫶', label:'Te quiero',   title:'Esto tenías que saber',        text:'No siempre sé decir las cosas perfectamente, pero sí sé que contigo todo vale doble. Gracias por estar aquí.' },
+  { emoji:'🌸', label:'Cumpleaños',  title:'Hoy que cumples 20',           text:'Veinte años del mundo con Ignacia en él. Eso merece una celebración enorme... y este sitio pequeño es solo el comienzo.' },
+  { emoji:'⭐', label:'Mi favorita', title:'Sin dudarlo',                  text:'Si me preguntan cuál es mi persona favorita, no tengo que pensar. Es instantáneo. Eres tú, siempre eres tú.' },
+  { emoji:'💛', label:'Siempre',     title:'Un recordatorio',              text:'Pase lo que pase, quiero que sepas que te admiro. Todo lo que eres, todo lo que haces, todo lo que sientes.' },
+  { emoji:'🎂', label:'Deseo',       title:'Mi deseo para ti',             text:'Que este año que empieza hoy sea tan especial como tú. Que estés rodeada de amor, risas y todo lo que mereces.' },
+];
+
+const msgGrid = document.getElementById('msgGrid');
+msgs.forEach((m, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'emoji-btn';
+  btn.innerHTML = `<span class="btn-emoji">${m.emoji}</span><span class="btn-label">${m.label}</span>`;
+  btn.onclick = () => openMsg(i);
+  msgGrid.appendChild(btn);
+});
+
+function openMsg(i) {
+  const m = msgs[i];
+  document.getElementById('msgEmoji').textContent = m.emoji;
+  document.getElementById('msgTitle').textContent = m.title;
+  document.getElementById('msgText').textContent  = m.text;
+  document.getElementById('msgOverlay').classList.add('open');
+}
+
+function closeMsg() { document.getElementById('msgOverlay').classList.remove('open'); }
+function closeMsgIfOutside(e) { if (e.target === document.getElementById('msgOverlay')) closeMsg(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMsg(); });
+
+// RAZONES
+['Por tu forma única de ver el mundo','Por cada conversación que se siente como casa','Por existir justo cuando necesitaba conocerte','Por tu risa que ilumina cualquier día','Por ser tú sin esfuerzo, todo el tiempo','Por ese primer mensaje que lo cambió todo','Por hacerme sentir especial con pequeñas cosas','Por absolutamente todo lo que eres']
+  .forEach((t, i) => {
+    const icons = ['✨','💬','🌸','😄','🤍','📱','🌟','💛'];
+    const card = document.createElement('div');
+    card.className = 'reason-card';
+    card.innerHTML = `<span class="reason-icon">${icons[i]}</span><p class="reason-text">${t}</p>`;
+    document.getElementById('reasonsGrid').appendChild(card);
+  });
+
+</script>
+</body>
+</html>
